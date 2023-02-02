@@ -34,11 +34,12 @@ const Field = (props) => {
   };
 
   return (
-    <div id="add-container">
+    <div className="container">
+      <h3>Add Form</h3>
       <form id="add-form" onSubmit={submitNote}>
         <div id="title-area" className="form-group">
           <label htmlFor="title" style={{ marginBottom: "5px" }}>
-            Title:
+            Note Name:
           </label>
           <input
             onChange={handleChange}

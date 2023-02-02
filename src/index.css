@@ -33,15 +33,20 @@ code {
   border: solid 2px black;
 }
 
-#add-container {
-  margin-top: 100px;
+.container {
+  margin: 100px 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
 }
 
 #title-area {
   margin: 15px;
+}
+
+li {
+  font-size: 24px;
 }
 
 
