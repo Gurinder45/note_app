@@ -1,11 +1,16 @@
 import { useState, useEffect } from "react";
 import Field from "./components/Field";
 import { NoteList } from "./components/NoteList";
-import NoteView from "./components/NoteView";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Modal from "react-bootstrap/Modal";
 
 function App() {
   const [notes, setNotes] = useState([]);
   const [selectedNote, setSelectedNote] = useState({});
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const getNotes = () => {
     return JSON.parse(localStorage.getItem("formData"));
@@ -17,6 +22,7 @@ function App() {
 
   const handleSelectNote = (note) => {
     setSelectedNote(note);
+    handleShow();
   };
 
   const handleNoteSubmit = () => {
@@ -27,7 +33,13 @@ function App() {
     <div className="App">
       <Field onNoteSubmit={handleNoteSubmit} />
       <NoteList notes={notes} onNoteClick={handleSelectNote} />
-      {selectedNote && <NoteView note={selectedNote} />}
+
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{selectedNote.title}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{selectedNote.content}</Modal.Body>
+      </Modal>
     </div>
   );
 }
