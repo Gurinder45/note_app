@@ -1,36 +1,26 @@
 import { useState, useEffect } from "react";
+import moment from "moment-timezone";
 
 const Field = (props) => {
-  const [formData, setFormData] = useState([]);
-  const [inputs, setInputs] = useState({
-    title: "",
-    content: "",
-  });
+  const [title, setTitle] = useState("");
+  const [noteBody, setNoteBody] = useState("");
 
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem("formData")) || [];
-    setFormData(storedData);
-  }, []);
-
-  const handleChange = (event) => {
-    setInputs({
-      ...inputs,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const submitNote = (event) => {
+  const submitNote = async (event) => {
     event.preventDefault();
-    setFormData([...formData, { ...inputs, id: Date.now() }]);
-    localStorage.setItem(
-      "formData",
-      JSON.stringify([...formData, { ...inputs, id: Date.now() }])
-    );
-    setInputs({
-      title: "",
-      content: "",
+    const timestamp = moment().format();
+    const response = await fetch("http://localhost:8080/add/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        noteBody,
+        timestamp,
+      }),
     });
-    props.onNoteSubmit();
+    const data = await response.json();
+    console.log(data);
   };
 
   return (
@@ -42,8 +32,8 @@ const Field = (props) => {
             Note Name:
           </label>
           <input
-            onChange={handleChange}
-            value={inputs.title}
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
             className="form-control"
             type="text"
             name="title"
@@ -52,14 +42,14 @@ const Field = (props) => {
           />
         </div>
         <div id="text-area" className="form-group">
-          <label htmlFor="content" style={{ marginBottom: "5px" }}>
+          <label htmlFor="noteBody" style={{ marginBottom: "5px" }}>
             Content:
           </label>
           <textarea
-            onChange={handleChange}
-            value={inputs.content}
+            onChange={(e) => setNoteBody(e.target.value)}
+            value={noteBody}
             className="form-control"
-            name="content"
+            name="noteBody"
             id="content"
             cols="50"
             rows="15"
