@@ -28,7 +28,6 @@ app.get("/notes", async (req, res) => {
 
 app.post("/add", async (req, res) => {
   const { title, noteBody, timestamp } = req.body;
-  console.log(timestamp);
   try {
     const { title, noteBody, timestamp } = req.body;
     const { rows } = await pool.query(
@@ -36,6 +35,44 @@ app.post("/add", async (req, res) => {
       [title, noteBody, timestamp]
     );
     res.json(rows[0]);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.delete("/delete/:id", async (req, res) => {
+  try {
+    const { rows } = await pool.query(
+      "DELETE FROM notes WHERE id = $1 RETURNING *",
+      [req.params.id]
+    );
+    if (rows.length > 0) {
+      res.json(rows[0]);
+    } else {
+      res.status(404).json({ message: "Note not found" });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.put("/update/:id", async (req, res) => {
+  const id = req.params.id;
+  const { title, noteBody, timestamp } = req.body;
+
+  try {
+    const { rows } = await pool.query(
+      "UPDATE notes SET title = $1, notebody = $2, timelastmodified = $3 WHERE id = $4 RETURNING *",
+      [title, noteBody, timestamp, id]
+    );
+
+    if (rows.length > 0) {
+      res.json(rows[0]);
+    } else {
+      res.status(404).json({ message: "Note not found" });
+    }
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

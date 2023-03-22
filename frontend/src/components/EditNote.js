@@ -1,15 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment-timezone";
 
-const Field = ({ onNoteSubmit }) => {
+const EditNote = ({note, stopEditing}) => {
   const [title, setTitle] = useState("");
   const [noteBody, setNoteBody] = useState("");
 
-  const submitNote = async (event) => {
+  useEffect(() => {
+    setTitle(note.title)
+    setNoteBody(note.notebody)
+  }, [note]);
+
+
+  const changeNote = async (event) => {
     event.preventDefault();
+    const id = note.id;
     const timestamp = moment().format();
-    const response = await fetch("http://localhost:8080/add/", {
-      method: "POST",
+    const response = await fetch(`http://localhost:8080/update/${id}`, {
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -21,15 +28,14 @@ const Field = ({ onNoteSubmit }) => {
     });
     const data = await response.json();
     console.log(data);
-    setTitle("");
-    setNoteBody("");
-    onNoteSubmit();
+    stopEditing();
   };
 
+    
   return (
     <div className="container">
-      <h4>Add New Note</h4>
-      <form id="add-form" onSubmit={submitNote}>
+      <h4 style={{ color: "red" }}>Editing {note.title}</h4>
+      <form id="edit-form" onSubmit={changeNote}>
         <div id="title-area" className="form-group">
           <label htmlFor="title" style={{ marginBottom: "5px" }}>
             Note Name:
@@ -60,10 +66,10 @@ const Field = ({ onNoteSubmit }) => {
             required
           ></textarea>
         </div>
-        <button type="submit"> SAVE NOTE</button>
+        <button type="submit"> SAVE CHANGES</button>
       </form>
     </div>
   );
 };
 
-export default Field;
+export default EditNote;
