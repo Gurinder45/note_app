@@ -8,7 +8,7 @@ const Field = ({ onNoteSubmit }) => {
   const submitNote = async (event) => {
     event.preventDefault();
     const timestamp = moment().format();
-    const response = await fetch("http://localhost:8080/add/", {
+    const response = await fetch("http://localhost:3000/add/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

@@ -15,7 +15,7 @@ const EditNote = ({note, stopEditing}) => {
     event.preventDefault();
     const id = note.id;
     const timestamp = moment().format();
-    const response = await fetch(`http://localhost:8080/update/${id}`, {
+    const response = await fetch(`http://localhost:3000/update/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

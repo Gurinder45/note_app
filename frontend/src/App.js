@@ -15,7 +15,7 @@ function App() {
   const handleShow = () => setShow(true);
 
   const getNotes = async () => {
-    const response = await fetch("http://localhost:8080/notes");
+    const response = await fetch("http://localhost:3000/notes");
     const notes = await response.json();
     setNotes(Array.isArray(notes) ? notes : []);
   };
@@ -43,7 +43,7 @@ function App() {
     const confirmed = window.confirm('Are you sure you want to delete this note?')
     if(confirmed) {
       const id = note.id;
-      const response = await fetch(`http://localhost:8080/delete/${id}`, {
+      const response = await fetch(`http://localhost:3000/delete/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

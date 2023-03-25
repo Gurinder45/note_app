@@ -5,7 +5,7 @@ export const NoteList = ({ notes, onNoteClick, onDelete, onEdit }) => {
       {notes.length > 0 ? (
         notes.map((note) => (
           <ul key={note.id}>
-            <li>
+            <li onClick={() => onNoteClick(note)}>
               {note.title}
             </li>
             <button type="button" className="btn btn-outline-success"onClick={() => onNoteClick(note)}>Full Note</button>
